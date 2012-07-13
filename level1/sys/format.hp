@@ -1,0 +1,11 @@
+@FORMAT
+Syntax: Format <devname> 
+Usage : Initializes a NitrOS-9 diskette
+Opts  :
+  R   - Ready
+  L   - Logical format only
+  "disk name"       
+  1/2 - number of sides
+  'No. of cylinders'   (in decimal)
+  :Interleave value:   (in decimal)
+  /Cluster size/       (in decimal)
