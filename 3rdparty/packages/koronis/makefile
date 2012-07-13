@@ -1,0 +1,87 @@
+include ../../../rules.mak
+
+DEPENDS		= ./makefile
+
+DSK_FLOPPY	= koronis.dsk
+DSK_DW3		= koronis_dw3.dsk
+CMDS		= koronis
+MD		= $(LEVEL2)/coco3/modules
+
+DSKS		= $(DSK_FLOPPY) $(DSK_DW3)
+
+# We make our own bootfile and kernel track
+KERNEL_FLOPPY	= $(MD)/rel_32 $(MD)/boot_1773_6ms $(MD)/krn
+KERNEL_DW3	= $(MD)/rel_32 $(MD)/boot_dw3 $(MD)/krn
+BOOTFILE_FLOPPY	= $(MD)/krnp2 $(MD)/ioman $(MD)/init \
+		$(MD)/rbf.mn \
+		$(MD)/rb1773.dr $(MD)/ddd0_40d.dd \
+		$(MD)/scf.mn $(MD)/vtio.dr \
+		$(MD)/keydrv_cc3.sb $(MD)/joydrv_joy.sb $(MD)/snddrv_cc3.sb \
+		$(MD)/covdg_small.io $(MD)/term_vdg.dt \
+		$(MD)/clock_60hz $(MD)/clock2_soft $(MD)/sysgo_dd
+
+BOOTFILE_DW3	= $(MD)/krnp2 $(MD)/ioman $(MD)/init \
+		$(MD)/rbf.mn \
+		$(MD)/rbdw3.dr $(MD)/dw3.sb $(MD)/ddx0.dd \
+		$(MD)/scf.mn $(MD)/vtio.dr \
+		$(MD)/keydrv_cc3.sb $(MD)/joydrv_joy.sb $(MD)/snddrv_cc3.sb \
+		$(MD)/covdg_small.io $(MD)/term_vdg.dt \
+		$(MD)/clock_60hz $(MD)/clock2_dw3 $(MD)/sysgo_dd
+
+SUPPORTFILES	= SAVE1 SAVE2 crobot2.c ctitle.c korvar \
+		level01 level02 level03 level04 level05 level06 level07 \
+		level08 level09 level10 level11 level12 level13 level14 \
+		level15 level16 level17 level18 level19 level20 \
+		robotbuff sinwave ultek
+
+ALLOBJS		= $(CMDS)
+
+all:	$(ALLOBJS)
+
+clean:	dskclean
+	$(RM) $(ALLOBJS)
+
+dsk:	all $(DSKS)
+
+$(DSK_FLOPPY):
+	$(RM) $@
+	$(CD) $(LEVEL2)/coco3; make
+	$(OS9FORMAT_SS35) -q $@ -n"Koronis Rift"
+	$(MERGE) $(BOOTFILE_FLOPPY)>os9boot
+	$(MERGE) $(KERNEL_FLOPPY)>kernel
+	$(OS9GEN) $@ -b=os9boot -t=kernel
+	$(RM) os9boot kernel
+	$(MAKDIR) $@,CMDS
+	$(CP) $(LEVEL2)/coco3/cmds/shell_21 $@,CMDS/shell
+	$(OS9ATTR_EXEC) $@,CMDS/shell
+	$(CP) $(CMDS) $@,CMDS
+	$(foreach file, $(CMDS), $(OS9ATTR_EXEC) $@,CMDS/$(file);)
+	$(OS9RENAME) $@,CMDS/koronis AutoEx
+	$(CP) $(SUPPORTFILES) $@,.
+
+$(DSK_DW3):
+	$(RM) $@
+	$(CD) $(LEVEL2)/coco3; make
+	$(OS9FORMAT_SS35) -q $@ -n"Koronis Rift"
+	$(MERGE) $(BOOTFILE_DW3)>os9boot
+	$(MERGE) $(KERNEL_DW3)>kernel
+	$(OS9GEN) $@ -b=os9boot -t=kernel
+	$(RM) os9boot kernel
+	$(MAKDIR) $@,CMDS
+	$(CP) $(LEVEL2)/coco3/cmds/shell_21 $@,CMDS/shell
+	$(OS9ATTR_EXEC) $@,CMDS/shell
+	$(CP) $(CMDS) $@,CMDS
+	$(foreach file, $(CMDS), $(OS9ATTR_EXEC) $@,CMDS/$(file);)
+	$(OS9RENAME) $@,CMDS/koronis AutoEx
+	$(CP) $(SUPPORTFILES) $@,.
+	$(foreach file, $(SUPPORTFILES), $(OS9ATTR_TEXT) $@,$(file);)
+
+dskcopy: dsk
+	$(CP) $(DSKS) $(DSKDIR)
+
+dskclean:
+	$(RM) $(DSKS)
+
+info:
+	@$(ECHO) "*** Koronis Rift ***"
+	@$(foreach dsk, $(DSKS), $(ECHO) $(dsk);)
