@@ -1,0 +1,3 @@
+@LOAD
+Syntax: Load <pathlist> [<pathlist> [...]]
+Usage : Loads modules into memory 

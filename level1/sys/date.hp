@@ -1,0 +1,5 @@
+@DATE
+Syntax: Date [<opts>]
+Usage : Displays current system date
+Opts  :
+  -t = display time also
