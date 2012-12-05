@@ -1,0 +1,3 @@
+@ASM
+Syntax: Asm filename [<opts>] [>list]
+Usage : Standard NitrOS-9 Assembler
