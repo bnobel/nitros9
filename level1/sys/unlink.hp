@@ -1,0 +1,3 @@
+@UNLINK
+Syntax: Unlink <modname>
+Usage : Unlinks one or more modules from memory
