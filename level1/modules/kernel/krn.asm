@@ -5,7 +5,7 @@
 *
 * This is how the memory map looks after the kernel has initialized:
 *
-*     $0000----> ================================== 
+*     $0000----> ==================================
 *               |                                  |
 *               |                                  |
 *  $0020-$0111  |  System Globals (D.FMBM-D.XNMI)  |
@@ -252,13 +252,13 @@ L00FB    ldd   ,y++
          bita  #CRCOn			CRC on?
          beq   GetMem			branch if not (already cleared earlier)
          inc   <D.CRC			else turn on CRC checking
-GetMem   equ   *
-         clra
-*         ldd   MaxMem+1,u
+*GetMem   ldd   MaxMem+1,u
 *         clrb
 *         cmpd  <D.MLIM
 *         bcc   L0158
 *         std   <D.MLIM
+GetMem   equ   *
+         clra
 L0158    ldx   <D.FMBM
 		IFNE	atari
 * In the Atari, memory $0000-$08FF is used by the system
