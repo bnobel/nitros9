@@ -1,0 +1,183 @@
+ifeq ($(PORT),)
+        PORT=coco1
+endif
+include $(NITROS9DIR)/rules.mak
+
+# Module directory
+MD		= ../modules
+# Commands directory
+CD		= ../cmds
+
+DEPENDS		= ./makefile
+
+KERNEL_1773	= $(MD)/rel $(MD)/krn $(MD)/krnp2 $(MD)/init \
+		$(MD)/boot_1773_6ms
+
+KERNEL_DW	= $(MD)/rel $(MD)/krn $(MD)/krnp2 $(MD)/init \
+		$(MD)/boot_dw
+
+IDE		= $(3PD)/ide
+SCSI		= $(3PD)/scsisys
+
+FLOPPY_40D = $(MD)/rb1773.dr $(MD)/d0_40d.dd $(MD)/d1_40d.dd $(MD)/d2_40d.dd \
+          $(MD)/ddd0_40d.dd
+FLOPPY_80D = $(MD)/rb1773.dr $(MD)/d0_40d.dd $(MD)/d1_40d.dd $(MD)/d2_40d.dd \
+          $(MD)/ddd0_80d.dd
+VTIO_COVDG = $(MD)/vtio.dr $(MD)/covdg.io $(MD)/term_vdg.dt
+VTIO_COHR  = $(MD)/vtio.dr $(MD)/cohr.io $(MD)/term_hr.dt
+VTIO_CO80  = $(MD)/vtio.dr $(MD)/co80.io $(MD)/term_80.dt
+PIPE       = $(MD)/pipeman.mn $(MD)/piper.dr $(MD)/pipe.dd
+CLOCK60HZ  = $(MD)/clock_60hz $(MD)/clock2_soft
+CLOCK60HZDW = $(MD)/clock_60hz $(MD)/clock2_dw
+RBDW       = $(MD)/rbdw.dr $(MD)/dwio.sb \
+		$(MD)/ddx0.dd $(MD)/x1.dd $(MD)/x2.dd $(MD)/x3.dd
+SCDWV_NET  = $(MD)/n_scdwv.dd $(MD)/n1_scdwv.dd $(MD)/n2_scdwv.dd \
+		$(MD)/n3_scdwv.dd $(MD)/n4_scdwv.dd $(MD)/n5_scdwv.dd \
+		$(MD)/n6_scdwv.dd $(MD)/n7_scdwv.dd $(MD)/n8_scdwv.dd \
+		$(MD)/n9_scdwv.dd $(MD)/n10_scdwv.dd $(MD)/n11_scdwv.dd \
+		$(MD)/n12_scdwv.dd $(MD)/n13_scdwv.dd $(MD)/midi_scdwv.dd
+SCDWV_WIN  = $(MD)/z1_scdwv.dd $(MD)/z2_scdwv.dd $(MD)/z3_scdwv.dd \
+		$(MD)/z4_scdwv.dd $(MD)/z5_scdwv.dd $(MD)/z6_scdwv.dd \
+		$(MD)/z7_scdwv.dd 
+SCDWP     = $(MD)/scdwp.dr $(MD)/p_scdwp.dd
+		
+BOOTFILE_COVDG	= $(MD)/ioman \
+		$(MD)/rbf.mn \
+		$(FLOPPY_40D) \
+		$(MD)/scf.mn \
+		$(VTIO_COVDG) \
+		$(MD)/scbbp.dr $(MD)/p_scbbp.dd \
+		$(MD)/scbbt.dr $(MD)/t1_scbbt.dd \
+		$(PIPE) \
+		$(CLOCK60HZ) \
+		$(MD)/sysgo_dd
+
+BOOTFILE_COHR	= $(MD)/ioman \
+		$(MD)/rbf.mn \
+		$(FLOPPY_40D) \
+		$(MD)/scf.mn \
+		$(VTIO_COHR) \
+		$(MD)/scbbp.dr $(MD)/p_scbbp.dd \
+		$(MD)/scbbt.dr $(MD)/t1_scbbt.dd \
+		$(PIPE) \
+		$(CLOCK60HZ) \
+		$(MD)/sysgo_dd
+
+BOOTFILE_CO80	= $(MD)/ioman \
+		$(MD)/rbf.mn \
+		$(FLOPPY_40D) \
+		$(MD)/scf.mn \
+		$(VTIO_CO80) \
+		$(MD)/scbbp.dr $(MD)/p_scbbp.dd \
+		$(MD)/scbbt.dr $(MD)/t1_scbbt.dd \
+		$(PIPE) \
+		$(CLOCK60HZ) \
+		$(MD)/sysgo_dd
+
+BOOTFILE_HEADLESS_DW	= $(MD)/ioman \
+		$(MD)/rbf.mn \
+		$(RBDW) \
+		$(MD)/scf.mn \
+		$(MD)/scdwv.dr \
+		$(MD)/term_scdwv.dt \
+		$(SCDWV_NET) \
+		$(SCDWV_WIN) \
+		$(SCDWP) \
+		$(CLOCK60HZDW) \
+		$(MD)/sysgo_dd
+
+BOOTFILE_COVDG_DW	= $(MD)/ioman \
+		$(MD)/rbf.mn \
+		$(FLOPPY_40D) \
+		$(RBDW) \
+		$(MD)/scf.mn \
+		$(VTIO_COVDG) \
+		$(MD)/scdwv.dr \
+		$(SCDWV_NET) \
+		$(SCDWV_WIN) \
+		$(SCDWP) \
+		$(PIPE) \
+		$(CLOCK60HZDW) \
+		$(MD)/sysgo_dd
+		
+BOOTFILE_COVDG_DS80	= $(MD)/ioman \
+		$(MD)/rbf.mn \
+		$(FLOPPY_80D) \
+		$(MD)/scf.mn \
+		$(VTIO_COVDG) \
+		$(MD)/scbbp.dr $(MD)/p_scbbp.dd \
+		$(MD)/scbbt.dr $(MD)/t1_scbbt.dd \
+		$(PIPE) \
+		$(CLOCK60HZ) \
+		$(MD)/sysgo_dd
+
+BOOTFILE_COHR_DW	= $(MD)/ioman \
+		$(MD)/rbf.mn \
+		$(FLOPPY_40D) \
+		$(RBDW) \
+		$(MD)/scf.mn \
+		$(VTIO_COHR) \
+		$(MD)/scdwv.dr \
+		$(SCDWV_NET) \
+		$(SCDWP)\
+		$(PIPE) \
+		$(CLOCK60HZDW) \
+		$(MD)/sysgo_dd
+
+BOOTFILE_COHR_DS80	= $(MD)/ioman \
+		$(MD)/rbf.mn \
+		$(FLOPPY_80D) \
+		$(MD)/scf.mn \
+		$(VTIO_CO80) \
+		$(MD)/scbbp.dr $(MD)/p_scbbp.dd \
+		$(MD)/scbbt.dr $(MD)/t1_scbbt.dd \
+		$(PIPE) \
+		$(CLOCK60HZ) \
+		$(MD)/sysgo_dd
+
+BOOTFILES	= bootfile_covdg bootfile_cohr bootfile_covdg_dw \
+		bootfile_headless_dw \
+		bootfile_cohr_dw bootfile_covdg_ds80 bootfile_cohr_ds80
+KERNELS		= kernel_1773 kernel_dw
+
+ALLOBJS		= $(BOOTFILES) $(KERNELS)
+
+all:	$(ALLOBJS)
+
+bootfile_covdg: $(BOOTFILE_COVDG) $(DEPENDS)
+	$(MERGE) $(BOOTFILE_COVDG)>$@
+
+bootfile_cohr: $(BOOTFILE_COHR) $(DEPENDS)
+	$(MERGE) $(BOOTFILE_COHR)>$@
+
+bootfile_co80: $(BOOTFILE_CO80) $(DEPENDS)
+	$(MERGE) $(BOOTFILE_CO80)>$@
+
+bootfile_covdg_ds80: $(BOOTFILE_COVDG_DS80) $(DEPENDS)
+	$(MERGE) $(BOOTFILE_COVDG_DS80)>$@
+
+bootfile_headless_dw: $(BOOTFILE_HEADLESS_DW) $(DEPENDS)
+	$(MERGE) $(BOOTFILE_HEADLESS_DW)>$@
+
+bootfile_covdg_dw: $(BOOTFILE_COVDG_DW) $(DEPENDS)
+	$(MERGE) $(BOOTFILE_COVDG_DW)>$@
+
+bootfile_cohr_ds80: $(BOOTFILE_COHR_DS80) $(DEPENDS)
+	$(MERGE) $(BOOTFILE_COHR_DS80)>$@
+
+bootfile_cohr_dw: $(BOOTFILE_COHR_DW) $(DEPENDS)
+	$(MERGE) $(BOOTFILE_COHR_DW)>$@
+
+# WD1773 Kernel
+kernel_1773: $(KERNEL_1773) $(DEPENDS)
+	$(MERGE) $(KERNEL_1773)>$@
+	$(PADROM) 4608 $@
+
+# DriveWire 3 Kernel
+kernel_dw: $(KERNEL_DW) $(DEPENDS)
+	$(MERGE) $(KERNEL_DW)>$@
+	$(PADROM) 4608 $@
+
+clean:
+	$(RM) $(ALLOBJS)
+

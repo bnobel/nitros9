@@ -1,0 +1,11 @@
+@COPY
+Syntax: Copy [<opts>] <srcpath> [<dstpath>] [<opts>]
+Usage : Copies files
+Opts  :
+  -a = abort on error
+  -p = don't print files copied (use with -w)
+  -r = rewrite destination
+  -s = single drive copy 
+  -v = verify the copy
+  -w=<dir> = copy to <dir>
+  -x = copy from exec dir
