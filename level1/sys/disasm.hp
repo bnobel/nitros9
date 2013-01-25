@@ -1,0 +1,11 @@
+@DISASM
+Syntax: Disasm [<opts>] [<pathlist>]
+Usage : 6809/6309 disassembler
+Opts  :
+ -m = disassemble module in memory
+ -o = display other information
+ -s = indicate disassembly start and end
+      addresses: -s$ssss$eeee
+ -u = don't convert U/DP offsets to labels
+ -x = file is in execution directory
+ -z = disassemble from standard input
