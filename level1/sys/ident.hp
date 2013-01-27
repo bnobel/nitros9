@@ -1,0 +1,8 @@
+@IDENT
+Syntax: Ident [<opts>] <path> [<opts>]
+Usage : Displays header information from NitrOS-9 memory modules
+Opts  :
+  -m = module in memory
+  -s = short form
+  -v = don't verify CRC
+  -x = file in exec dir
