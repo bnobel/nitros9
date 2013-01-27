@@ -1,0 +1,119 @@
+NitrOS-9 V03.02.07 Release Goals TODO
+=====================================
+VTIO
+	- Fix init/term bug (only seen if windowing system is successively
+          brought up/torn down).  This a long-standing bug, but doesn't impact
+          the typical user.  More of an irritant than anything else.
+	- Backport along with keydrv, joydrv, snddrv to Level 1.
+
+ioman
+	- Backport to Level 1
+
+rbf
+	- Backport to Level 1
+
+format
+	- Add option to allow formatting of Dragon disk format.
+	BGP, 01/15/08:
+	Is this needed?  format.asm builds for the Dragon port
+	to allow formatting a Dragon disk.  So the Dragon version of NitrOS-9
+	has its own 'format' executable, as does the CoCo version.
+    
+rb1773
+	- Fix SS.WTrk to handle high density drives (is this working now?)
+	- Fix SS.WTrk bug which causes crashes on some CoCos (I believe the
+	  slowdown was employed as a temporary workaround?)
+	12/16/05:
+	Using a Disto Super Controller I hooked up to a 6309 CoCo 3, I
+	booted to V03.02.04 and formatted /d1 which is a 5.25" 360K drive.
+	I experienced the same computer lock-ups that others have seen.
+	12/17/05:
+	With the same setup that I made the above discovery, I made
+	a new system disk with the latest code, the only thing being
+	different was rb1773.asm which I retrieved from the repository
+	at revision 1.10, the same revision that was part of V03.02.04.  I
+	did a physical format on a 360K disk SIX times without any lockups.
+	I then reverted to the format that was part of V03.02.04 and again,
+	SIX physical formats yielded no lockups.
+
+	Finally, I reinstated the latest rb1773 and format, then modified
+	rb1773.asm to not slow down and speed up the CoCo 3 around the
+	SS.WTrk code.  Six physical formats did not show a single lock-up.
+
+	Conclusion: Further research is needed to warrant what caused this
+	bug in V03.02.04.  It does not appear to be related to the driver
+	directly, nor to the format utility.  It may be related to the
+	kernel since that component has changed since V03.02.04.  At this
+	point and time, further testing of the latest repository is needed
+	to confirm on other systems that this bug no longer exists.
+
+	- Add code to select MPI slot where disk controller is (can assume
+          slot 4 or allow the value to be placed in the descriptor)
+
+scf
+	- Backport to Level 1
+
+wordpakii
+	- Adapt source to act as CoWP module to VTIO
+	  (Phill-Harvey Smith said he would tackle this... Phill?)
+
+os9gen
+	- Add the -q option for quick linking of bootfiles
+
+All boot modules
+	- Handle fragmented bootfiles
+	  (boot_1773 is done, others need to be modified and tested)
+
+NitrOS-9 V03.02.06 Release Goals COMPLETED
+==========================================
+attr
+	- Use SS.FD to set/get FD sector information instead of raw access
+
+ccio (Level 1)
+	- Renamed to VTIO
+
+cciodefs (Level 1)
+	- Renamed to vtiodefs
+
+co32 (Level 1)
+	- Renamed to CoVDG
+
+co51 (Level 1)
+	- Renamed to CoHR
+
+grfo (Level 1)
+	- Renamed to GrfDrv
+
+cc3io (Level 2)
+	- Renamed to VTIO
+
+cc3iodefs (Level 2)
+	- Renamed to vtiodefs_cc3
+
+vdgint (Level 2)
+	- Renamed to CoVDG
+
+windint (Level 2)
+	- Renamed to CoWIN
+
+grfint (Level 2)
+	- Renamed to CoGRF
+
+dir
+	- Use SS.FDInf to get FD sector information instead of raw access
+
+dsave
+	- Add -t and -n options and update dsave.hp
+
+format
+	- Fix bitmap wipeout bug
+
+rbf
+	- Modified SS.FD to set file attributes
+	- Level 1: Added SS.FDInf
+
+printer
+	- renamed to scbbp
+	
+sio
+	- renamed to scbbt

@@ -1,0 +1,7 @@
+@DUMP
+Syntax: Dump [<opts>] [<path>] [<opts>]
+Usage : Formatted file dump in hexadecimal and ASCII
+Opts  :
+  -h = no header
+  -m = module in memory
+  -x = file in exec dir

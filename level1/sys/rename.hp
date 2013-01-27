@@ -1,0 +1,3 @@
+@RENAME
+Syntax: Rename <pathlist> <filename>
+Usage : Gives the file or directory a new name

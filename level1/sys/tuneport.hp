@@ -1,0 +1,3 @@
+@TUNEPORT
+Syntax: Tuneport <device> [value]
+Usage : Adjust the baud value for the serial port

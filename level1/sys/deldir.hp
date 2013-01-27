@@ -1,0 +1,3 @@
+@DELDIR
+Syntax: Deldir <path>
+Usage : Deletes entire directories
