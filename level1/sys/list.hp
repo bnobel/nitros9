@@ -1,0 +1,3 @@
+@LIST
+Syntax: List <path> [<path> [...]]
+Usage : Lists the contents of text files

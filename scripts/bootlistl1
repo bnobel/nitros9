@@ -1,0 +1,138 @@
+***************************************
+* Kernel/System Section
+*
+* These modules are mandatory.
+$NITROS9DIR/$DISTRO/modules/ioman
+*
+***************************************
+* RBF Section
+*
+$NITROS9DIR/$DISTRO/modules/rbf.mn
+*
+* DriveWire driver (Cloud-9 product)
+$CLOUD9DIR/Products/DriveWire/software/$DISTRO/drivewire.dr
+* DriveWire descriptors - select as needed
+$CLOUD9DIR/Products/DriveWire/software/$DISTRO/ddx0.dd
+$CLOUD9DIR/Products/DriveWire/software/$DISTRO/x0.dd
+$CLOUD9DIR/Products/DriveWire/software/$DISTRO/x1.dd
+$CLOUD9DIR/Products/DriveWire/software/$DISTRO/x2.dd
+$CLOUD9DIR/Products/DriveWire/software/$DISTRO/x3.dd
+*
+* SuperDriver Package (Cloud-9 product)
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/rbsuper.dr
+* Select Low level SCSI and/or IDE driver
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/lltc3.dr
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/llide.dr
+* SuperDriver descriptors - select as needed
+* SCSI descriptors (IDs 0-7)
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/s0_tc3.dd
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/s1_tc3.dd
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/s2_tc3.dd
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/s3_tc3.dd
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/s4_tc3.dd
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/s5_tc3.dd
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/s6_tc3.dd
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/s7_tc3.dd
+* SCSI HDB-DOS descriptor
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/sh_ide.dd
+* IDE descriptors (master/slave)
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/i0_ide.dd
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/i1_ide.dd
+* IDE HDB-DOS descriptor
+*$CLOUD9DIR/Products/SuperDrivers/software/$DISTRO/ih_ide.dd
+*
+* WD1773 floppy support for Tandy and compatible disk controllers
+$NITROS9DIR/$DISTRO/modules/rb1773.dr
+* WD1773 floppy support for Disto Super Controller II
+*$NITROS9DIR/$DISTRO/modules/rb1773_scii_ff74.dr
+*$NITROS9DIR/$DISTRO/modules/rb1773_scii_ff58.dr
+* Floppy device descriptors
+* DD - default device - choose one if needed
+*$NITROS9DIR/$DISTRO/modules/ddd0_35s.dd
+*$NITROS9DIR/$DISTRO/modules/ddd0_40d.dd
+*$NITROS9DIR/$DISTRO/modules/ddd0_80d.dd
+* D0 - drive 0 - choose one if needed
+*$NITROS9DIR/$DISTRO/modules/d0_35s.dd
+$NITROS9DIR/$DISTRO/modules/d0_40d.dd
+*$NITROS9DIR/$DISTRO/modules/d0_80d.dd
+* D1 - drive 1 - choose one if needed
+*$NITROS9DIR/$DISTRO/modules/d1_35s.dd
+$NITROS9DIR/$DISTRO/modules/d1_40d.dd
+*$NITROS9DIR/$DISTRO/modules/d1_80d.dd
+* D2 - drive 2 - choose one if needed
+*$NITROS9DIR/$DISTRO/modules/d2_35s.dd
+$NITROS9DIR/$DISTRO/modules/d2_40d.dd
+*$NITROS9DIR/$DISTRO/modules/d2_80d.dd
+* D3 - drive 3 - choose if needed
+*$NITROS9DIR/$DISTRO/modules/d3_35s.dd
+***************************************
+* SCF Section
+*
+$NITROS9DIR/$DISTRO/modules/scf.mn
+*
+* CoCo I/O driver and subroutine modules
+$NITROS9DIR/$DISTRO/modules/ccio.dr
+* Choose from CO32 (32x16 VDG) or CO51 (51x24 graphics screen)
+*$NITROS9DIR/$DISTRO/modules/co32.io
+*$NITROS9DIR/$DISTRO/modules/co51.io
+$NITROS9DIR/$DISTRO/modules/wordpakii.dr
+*
+* Select only one term descriptor
+*$NITROS9DIR/$DISTRO/modules/term32.dt
+*$NITROS9DIR/$DISTRO/modules/term51.dt
+$NITROS9DIR/$DISTRO/modules/term80.dt
+*$NITROS9DIR/$DISTRO/modules/term_sio.dt
+*$NITROS9DIR/$DISTRO/modules/term_sc6551.dt
+*
+* Serial port drivers
+* Built-In RS-232 port
+*$NITROS9DIR/$DISTRO/modules/sio.dr
+*$NITROS9DIR/$DISTRO/modules/t1.dd
+* 6551 ACIA
+*$NITROS9DIR/$DISTRO/modules/sc6551.dr
+*$NITROS9DIR/$DISTRO/modules/t2_sc6551.dd
+*$NITROS9DIR/$DISTRO/modules/t3_sc6551.dd
+*
+* Printer drivers
+*$NITROS9DIR/$DISTRO/modules/printer.dr
+*$NITROS9DIR/$DISTRO/modules/p.dd
+*
+***************************************
+* Pipe Section
+*
+* Pipes are a useful but optional part of a system.
+$NITROS9DIR/$DISTRO/modules/pipeman.mn
+$NITROS9DIR/$DISTRO/modules/piper.dr
+$NITROS9DIR/$DISTRO/modules/pipe.dd
+*
+***************************************
+* Clock Section
+*
+* Select one clock module depending upon your power line frequency
+* (60Hz = USA/Canada; 50Hz = Europe, Australia)
+$NITROS9DIR/$DISTRO/modules/clock_60hz
+*$NITROS9DIR/$DISTRO/modules/clock_50hz
+* Select one clock2 module that supports your real-time clock, if any.
+* Besides support for the internal software clock, the following
+* hardware clocks are supported: Burke & Burke, Disto 2-N-1, Disto 4-N-1,
+* Eliminator, Harris, SmartWatch, Cloud-9, the MESS emulator, Jeff
+* Vavasour's CoCo emulator, and DriveWire.
+*$NITROS9DIR/$DISTRO/modules/clock2_soft
+*$NITROS9DIR/$DISTRO/modules/clock2_bnb
+*$NITROS9DIR/$DISTRO/modules/clock2_disto2
+*$NITROS9DIR/$DISTRO/modules/clock2_disto4
+*$NITROS9DIR/$DISTRO/modules/clock2_elim
+*$NITROS9DIR/$DISTRO/modules/clock2_harris
+*$NITROS9DIR/$DISTRO/modules/clock2_smart
+*$NITROS9DIR/$DISTRO/modules/clock2_jvemu
+*$NITROS9DIR/$DISTRO/modules/clock2_messemu
+*$NITROS9DIR/$DISTRO/modules/clock2_cloud9
+$CLOUD9DIR/Products/DriveWire/software/$DISTRO/clock2_dw
+* 
+***************************************
+* System Kick-Start Module
+*
+* Choose which startup module you wish to use. (sysgo_dd is recommended
+* for most configurations.)
+$NITROS9DIR/$DISTRO/modules/sysgo_dd
+*$NITROS9DIR/$DISTRO/modules/sysgo_h0
