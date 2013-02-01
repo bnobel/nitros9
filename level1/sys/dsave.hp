@@ -1,0 +1,22 @@
+@DSAVE
+Syntax: Dsave [<opts>] [<to path>]
+Usage : Generates procedure file to copy all files from the
+        current directory to <to path>
+Opts  :
+  -b = make a system disk by using OS9boot if present
+  -b=<path> = make system disk using path as source
+  -i = indent for directory levels
+  -l = do not process below the current level
+  -m = do not include makdir commands in procedure file
+  -n = don't load copy/cmp
+  -r = force rewrite of file on copy
+  -s<num> = set copy size to num K
+  -t = don't issue tmode (pause/nopause)
+  -v = verify copies
+
+Examples:
+   Create a script to copy /h0 to /h5 with forced rewrite:
+       chd /h0; dsave -r /h5 > dsave.out
+
+   Immediately copy /d0 to /d1 with a 24K copy buffer:
+       chd /d0; dsave -s24 /d1 ! shell -p

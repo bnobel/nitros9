@@ -1,0 +1,134 @@
+* miscellaneous definitions
+HResMaxX equ   639        high resolution X limit
+HResMaxY equ   191        high resolution Y limit
+MousData equ   $0008      arbitrary choice for mouse data area ($0008-$000F)
+*PcktSize equ  5	  wrong for M$, Logitek mice
+PcktSize equ   4          number of bytes in mouse data packet, wrong. max 4, usually 3
+*SyncData equ   %10000000  initial mouse data byte pattern- wrong
+SyncData equ   %01000000  initial mouse data byte pattern, d7 is NOT used
+*SyncMask equ   %11111000  mask for initial mouse data byte pattern-wrong
+SyncMask equ   %01111000  mask for initial mouse data byte pattern
+* 6551 register definitions
+         org   0
+DataReg  rmb   1          receive/transmit data
+StatReg  rmb   1          IRQ/DSR/DCD/error status (read only)
+PRstReg  equ   StatReg    programmed reset (write only)
+CmdReg   rmb   1          command (parity/echo/Tx IRQ/Rx IRQ/DTR)
+CtrlReg  rmb   1          control (stop bits/word length/Rx clock/baud rate)
+
+* Status bit definitions
+Stat.IRQ equ   %10000000  IRQ occurred
+Stat.DSR equ   %01000000  current DSR input level (0=enabled, 1=disabled)
+Stat.DCD equ   %00100000  current DCD input level (0=enabled, 1=disabled)
+Stat.TxE equ   %00010000  Tx register empty
+Stat.RxF equ   %00001000  Rx register full
+Stat.Ovn equ   %00000100  overrun error
+Stat.Frm equ   %00000010  framing error
+Stat.Par equ   %00000001  parity error
+
+Stat.Err equ   Stat.Ovn!Stat.Frm!Stat.Par status error bits
+Stat.Flp equ   $00        all status bits active when set
+Stat.Msk equ   Stat.RxF!Stat.Ovn!Stat.Frm!Stat.Par active IRQ bits
+
+* Command bit definitions
+Cmd.Par  equ   %11100000  see parity table below
+Cmd.Echo equ   %00010000  Rx echo (0=disabled, 1=enabled)
+Cmd.TxIC equ   %00001100  see Tx IRQ control table below
+Cmd.RxIE equ   %00000010  Rx IRQ enable (0=enabled, 1=disabled)
+Cmd.DTR  equ   %00000001  DTR output (0=disabled, 1=enabled)
+
+* parity table
+Par.None equ   %00000000
+Par.Odd  equ   %00100000
+Par.Even equ   %01100000
+Par.Mark equ   %10100000
+Par.Spac equ   %11100000
+
+* Tx IRQ control table
+TIC.Off  equ   %00000000  RTS disabled, Tx IRQ disabled
+TIC.On   equ   %00000100  RTS enabled, Tx IRQ enabled
+TIC.RTS  equ   %00001000  RTS enabled, Tx IRQ disabled
+TIC.Brk  equ   %00001100  RTS enabled, Tx line break
+
+* Control bit definitions
+Ctl.Stop equ   %10000000  stop bits (clear=1, set=2)
+Ctl.DBit equ   %01100000  see data bit table below
+Ctl.RClk equ   %00010000  Rx clock source (0=external, 1=internal)
+Ctl.Baud equ   %00001111  see baud rate table below
+
+* data bit table
+DB.5     equ   %01100000  five data bits per character
+DB.6     equ   %01000000  six data bits per character
+DB.7     equ   %00100000  seven data bits per character
+DB.8     equ   %00000000  eight data bits per character
+* GH 28/06/2008 Note, data format is only 7 bits
+* but most mice send 8 bits with the last bit,
+* MSB set which=extra stop bit, so use DB.7
+* baud rate table
+         org   0
+BR.ExClk rmb   1          16x external clock
+BR.00050 rmb   1          50 baud
+BR.00075 rmb   1          75 baud
+BR.00110 rmb   1          109.92 baud
+BR.00135 rmb   1          134.58 baud
+BR.00150 rmb   1          150 baud
+BR.00300 rmb   1          300 baud
+BR.00600 rmb   1          600 baud
+BR.01200 rmb   1          1200 baud
+BR.01800 rmb   1          1800 baud
+BR.02400 rmb   1          2400 baud
+BR.03600 rmb   1          3600 baud
+BR.04800 rmb   1          4800 baud
+BR.07200 rmb   1          7200 baud
+BR.09600 rmb   1          9600 baud
+BR.19200 rmb   1          19200 baud
+
+* Btn.Cntr bit definitions
+BC.ButnL equ   %00100000  button #1 (left, 1 = pressed=$20)
+BC.ButnR equ   %00010000  button #2 (right, 1 = pressed=$10)
+BC.ButnC equ   %00001000  button #3 (center, 1 = pressed=$08)
+BC.RxCnt equ   %00000111  Rx data byte count
+BC.Butns equ   BC.ButnL!BC.ButnR!BC.ButnC mask for all buttons
+
+* added 06/21/2008 GH some defines for button up
+BU.ButnL equ   %00011111  to clear button #1 left
+BU.ButnR equ   %00101111  to clear button #2 right
+BU.ButnC equ   %00110111  to clear button #3 center
+
+* Added 06/21/2008 GH more possibly handy defines
+* here is a good place to define mouse buttons
+* as the mouse output data delivers them to us
+MD.Sync  equ %01000000 never set unless sync byte
+MD.ButnL equ %00100000 left, in first 'sync' byte of logitek mouse
+MD.ButnR equ %00010000 right, in first 'sync' byte of logitek mouse
+MD.ButnC equ %00100000 center, but in 4th byte only
+MskYYXX  equ  %11000000 for use after shifted to msbits
+* mouse static data area definitions
+         org   0
+Btn.Cntr rmb   1          mouse button status and Rx data counter
+Buffer   rmb   3          Rx buffer for 1st 3 bytes of XY mouse data (must start at 1,u)
+CrntXPos rmb   2          mouse X position (0 to HResMaxX)
+CrntYPos rmb   2          mouse Y position (0 to HResMaxY*2)
+
+* added, may, may not be usefull, GH
+* logitek mouse data defs, almost same as M$, bit D7 of any byte is don't care
+* BECAUSE THE MOUSE IS A 7N1 MOUSE!
+* Assume Btn.Cntr will be inc'd as last processing op of each byte rx'd here.
+LkMsMask equ	%01111111 d7 ignored
+LkMsSync equ	%01000000 only set for first byte of packet, set Btn.Cntr=0
+LkMsLBtn equ	%00100000 if left button pushed, in sync byte
+LkMsRbtn equ	%00010000 if right button pushed, in sync byte
+* except this one in 4th byte
+LgtkCBtn equ	%00100000 if center button pushed, and Btn.Cntr=3
+* sign bits
+LkMsYSgn equ	%00001000 direction of current move, in sync byte
+LkMsXSgn equ	%00000010 direction of current move, in sync byte
+* direction since last packet bits
+LkMsYMsb equ	%00000100 MSB of current Y move, in sync byte
+LkMsXMsb equ	%00000001 MSB of current X move, in sync byte
+LkMsXMov equ	%00111111 the rest of an 7 bit value, when Btn.Cntr=1 (second byte)
+LkMsYMov equ	%00111111 the rest of an 7 bit value, when Btn.Cntr=2
+
+* Microsoft sends the center button down as a no data packet
+* sync bit only in first byte
+* ANYTHING else is a center button up event.
