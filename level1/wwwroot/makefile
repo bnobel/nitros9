@@ -11,4 +11,4 @@ clean:
 	$(RM) index.html
 
 showobjs:
-	@$(ECHO) index.html
+	@$(ECHO) index.html nitros9.jpg

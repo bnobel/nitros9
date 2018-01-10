@@ -8,6 +8,9 @@
 * ------------------------------------------------------------------
 *   1      2013/05/22  Boisy G. Pitre
 * Started.
+*
+*   2      2017/12/21  Boisy G. Pitre
+* Added ability to serve image file types, optimized.
 
                nam       httpd
                ttl       HTTP daemon
@@ -17,18 +20,19 @@ type           equ       Prgrm
 lang           equ       Objct
 attr           equ       ReEnt
 rev            equ       $00
-edition        equ       1
+edition        equ       2
 stack          equ       200
                endsect
 
                section   bss
-gbufferl       equ       128
-gbuffer        rmb       gbufferl
+lbufferl       equ       256
+lbuffer        rmb       lbufferl+1
 dentbuf        rmb       32
 filepath       rmb       1
 fileptr        rmb       2
-lbufferl       equ       128
-lbuffer        rmb       lbufferl
+filesize       rmb       4
+getbufferl     equ       lbufferl
+getbuffer      rmb       getbufferl+1
                endsect
 
                section   code
@@ -48,10 +52,13 @@ __start
                os9       I$ChgDir
                bcs       errexit
                               
+* nul out getbuffer
+               clr       getbuffer,u
+
 * main loop: read line on stdin
 mainloop
-               leax      gbuffer,u
-               ldy       #gbufferl
+               leax      lbuffer,u
+               ldy       #lbufferl
                clra
                os9       I$ReadLn
                bcs       checkeof
@@ -62,30 +69,45 @@ mainloop
                clr       -1,x
                puls      x
                bsr       process
-               bra       errexit
+               bra       mainloop
                
 checkeof       cmpb      #E$EOF
                bcs       errexit
-               clrb
+okexit         clrb
 errexit        
                pshs      cc,b
                lda       #1
                lbsr      SetEchoOn
                puls      cc,b
-	           os9       F$Exit
+               os9       F$Exit
 
 * input: X = line read (nul terminated)
 process
+* check for empty line
+               tst       ,x              nul byte?
+               bne       checkGET        if not, continue
+               bsr       processGET
+               bra       okexit
+                
 * check for GET
-               leay      get,pcr
+checkGET       leay      get,pcr
                ldd       #getl
                lbsr      STRNCMP
-               beq       GETOK
+               beq       CopyGET
                clrb
                rts
 
+* copy line with GET into our get buffer
+CopyGET        leay      getbuffer,u
+               lbsr      STRCPY
+bye            rts
+
 * we know it is a GET... get the text following it               
-GETOK          leax      4,x
+processGET
+               leax      getbuffer,u
+               tst       ,x
+               beq       bye
+               leax      4,x
                ldd       ,x
                cmpd      #'/*256+C$SPAC
                beq       doindex
@@ -103,7 +125,7 @@ terminate@     clr       -1,x
                puls      x
                bra       readfile
 
-* point to index.html
+* point to default page
 doindex        leax      index,pcr               
 readfile
                stx       fileptr,u
@@ -111,7 +133,30 @@ readfile
                os9       I$Open
                bcs       isitdir
 
+* get file size
+*               ldb       #SS.Size              
+*               tfr       u,y
+*               pshs      x,u
+*               os9       I$GetStt
+*               bcs       err@
+*               stx       filesize,y
+*               stu       filesize+2,y
+*err@           puls      x,u
+
+* get file type via extension
+* X points to last character in path + 1
+               pshs      a,x,y
+l@             leax      -1,x
+               lda       ,x
+               cmpx      1,s     reached start?
+               beq       end@
+               cmpa      #'.
+               bne       l@
+               leax      1,x
+* X points to the extension
+end@           lbsr      getContentType
                lbsr      print200OK
+               puls      a,x,y
 
 readloop       leax      lbuffer,u
                ldy       #lbufferl
@@ -138,6 +183,7 @@ isitdir        cmpb      #E$FNA
                lbcs      notfound
 * process dir here
                sta       filepath,u
+               leax      htmlcontenttype,pcr
                lbsr      print200OK
                lbsr      _htmltag
                lbsr      _headtag
@@ -227,6 +273,24 @@ _server
                lbsr      _newline
                rts
 
+*_contentlength
+*               lbsr      PRINTS
+*               fcc       "Content-Length: "
+*               fcb       $00
+*               pshs      a
+*               ldd       filesize+2,u
+*               lbsr      PRINT_DEC
+*               puls      a
+*               lbsr      PRINTS
+*               fcb       C$CR,$00
+*               rts
+
+_contenttype
+               lbsr      PRINTS
+               fcc       "Content-Type: "
+               fcb       $00
+               rts
+
 _connclose
                lbsr      PRINTS
                fcc       "Connection: close"
@@ -294,16 +358,21 @@ _nbodytag
                fcb       $00
                rts                        
 
+* X = address of nul-terminated content type string
 print200OK
                lbsr      _http11
                lbsr      PRINTS
                fcc       "200 OK"
                fcb       C$CR,$00
                lbsr      _server
+               lbsr      _contenttype
+               lbsr      PUTS           content type
+               lbsr      _newline
                lbsr      _connclose
                lbsr      _newline
                rts
                      
+
 print404
                lbsr      _http11
                lbsr      PRINTS
@@ -345,6 +414,70 @@ wwwroot        fcs       "....../WWWROOT"
 get            fcc       "GET "
 getl           equ       *-get               
                fcb       $00
-index          fcs       "index.html"
-            
+index          fcc       "index.html"
+               fcb       $00
+* supported file types
+htmlcontenttype
+               fcc       "text/"
+htmlext        fcc       "html"
+               fcb       $00
+
+pngcontenttype
+               fcc       "image/"
+pngext         fcc       "png"
+               fcb       $00
+
+jpgcontenttype
+               fcc       "image/"
+jpgext         fcc       "jpg"
+               fcb       $00
+
+jpegcontenttype
+               fcc       "image/"
+jpegext        fcc       "jpeg"
+               fcb       $00
+
+gifcontenttype
+               fcc       "image/"
+gifext         fcc       "gif"
+               fcb       $00
+
+icocontenttype
+               fcc       "image/x-icon"
+               fcb       $00
+icoext         fcc       "ico"
+               fcb       $00
+
+textcontenttype
+               fcc       "text/"
+textext        fcc       "text"
+               fcb       $00
+
+exttable       fdb       htmlext-exttable,htmlcontenttype-exttable
+               fdb       pngext-exttable,pngcontenttype-exttable
+               fdb       jpgext-exttable,jpgcontenttype-exttable
+               fdb       jpegext-exttable,jpegcontenttype-exttable
+               fdb       icoext-exttable,icocontenttype-exttable
+               fdb       gifext-exttable,gifcontenttype-exttable
+               fdb       $0000
+               
+* Entry: X = ptr to extension
+* Exit:  X = ptr to nul-terminated content type string
+getContentType
+               pshs      y,u
+               leau      exttable-4,pcr
+l@             leau      4,u
+               ldd       ,u
+               beq       default@
+               leay      exttable,pcr
+               leay      d,y
+               lbsr      STRCMP
+               bne       l@
+match@         leax      exttable,pc
+               ldd       2,u
+               leax      d,x
+               puls      y,u,pc
+default@       leax      textcontenttype,pcr
+               puls      y,u,pc
+
                endsect

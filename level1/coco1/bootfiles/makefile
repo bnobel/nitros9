@@ -35,6 +35,7 @@ FLOPPY_40D	= $(MD)/rb1773.dr $(MD)/d0_40d.dd $(MD)/d1_40d.dd $(MD)/d2_40d.dd
 FLOPPY_80D	= $(MD)/rb1773.dr $(MD)/d0_40d.dd $(MD)/d1_40d.dd $(MD)/d2_40d.dd 
 
 VTIO_COVDG	= $(MD)/vtio.dr $(MD)/covdg.io $(MD)/term_vdg.dt
+VTIO_COVGA	= $(MD)/vtio.dr $(MD)/covga.io $(MD)/term_vga.dt
 VTIO_COHR	= $(MD)/vtio.dr $(MD)/cohr.io $(MD)/term_hr.dt
 VTIO_CO80	= $(MD)/vtio.dr $(MD)/co80.io $(MD)/term_80.dt
 VTIO_CO42	= $(MD)/vtio.dr $(MD)/co42.io $(MD)/term_42.dt
@@ -175,6 +176,21 @@ BOOTFILE_COVDG_DW	= $(MD)/ioman \
 		$(MD)/ddx0.dd \
 		$(MD)/scf.mn \
 		$(VTIO_COVDG) \
+		$(MD)/scdwv.dr \
+		$(SCDWV_NET) \
+		$(SCDWV_WIN) \
+		$(SCDWP) \
+		$(PIPE) \
+		$(CLOCK60HZDW) \
+		$(MD)/sysgo_dd
+
+BOOTFILE_COVGA_DW	= $(MD)/ioman \
+		$(MD)/rbf.mn \
+		$(FLOPPY_40D) \
+		$(RBDW) \
+		$(MD)/ddx0.dd \
+		$(MD)/scf.mn \
+		$(VTIO_COVGA) \
 		$(MD)/scdwv.dr \
 		$(SCDWV_NET) \
 		$(SCDWV_WIN) \
@@ -420,6 +436,9 @@ bootfile_arduino_headless: $(BOOTFILE_ARDUINO_HEADLESS) $(DEPENDS)
 
 bootfile_covdg_dw: $(BOOTFILE_COVDG_DW) $(DEPENDS)
 	$(MERGE) $(BOOTFILE_COVDG_DW)>$@
+
+bootfile_covga_dw: $(BOOTFILE_COVGA_DW) $(DEPENDS)
+	$(MERGE) $(BOOTFILE_COVGA_DW)>$@
 
 bootfile_covdg_dw_game: $(BOOTFILE_COVDG_DW_GAME) $(DEPENDS)
 	$(MERGE) $(BOOTFILE_COVDG_DW_GAME)>$@

@@ -151,6 +151,8 @@ $(DSKDW):
 	$(CD) bootlists; $(CPL) *.bl ../$@,NITROS9/$(DISTRO)/BOOTLISTS
 	$(MAKDIR) $@,NITROS9/$(DISTRO)/SCRIPTS
 	$(CD) scripts; $(CPL) mb* ../$@,NITROS9/$(DISTRO)/SCRIPTS
+	$(MAKDIR) $@,WWWROOT
+	$(CD) wwwroot; $(CPL) *.html ../$@,WWWROOT; $(OS9COPY) *.ico *.gif *.png *.jpg *.jpeg ../$@,WWWROOT
 	$(RM) $(LDSKDW)
 	$(SOFTLINK) $@ $(LDSKDW)
 
