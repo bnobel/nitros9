@@ -93,7 +93,7 @@ L0056    ldd   #256
          stx   <V.CrsrA,u 	save start cursor position
          leax  >COLSIZE*ROWSIZE,x		point to end of screen
          stx   <V.ScrnE,u 	save it
-         lda   #$60		get default character
+LDClrCh  lda   #$60		get default character
          sta   <V.CChar,u 	put character under the cursor
          sta   <V.Chr1,u	only referenced here ??
          
